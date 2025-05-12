@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Donation App - Home</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+    h1 { text-align: center; }
+    .form-container { max-width: 300px; margin: auto; display: none; }
+    input, button { width: 100%; margin: 10px 0; padding: 10px; }
+    .button-container { text-align: center; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Donation App</h1>
+  <div class="button-container">
+    <button onclick="showForm('register')">Register</button>
+    <button onclick="showForm('login')">Login</button>
+  </div>
+
+  <div class="form-container" id="registerForm">
+    <h3>Register</h3>
+    <input type="text" id="regName" placeholder="Name">
+    <input type="email" id="regEmail" placeholder="Email">
+    <input type="password" id="regPassword" placeholder="Password">
+    <button onclick="register()">Submit</button>
+  </div>
+
+  <div class="form-container" id="loginForm">
+    <h3>Login</h3>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
+
+  <script>
+    const user = {};
+
+    function showForm(type) {
+      document.getElementById("registerForm").style.display = type === 'register' ? 'block' : 'none';
+      document.getElementById("loginForm").style.display = type === 'login' ? 'block' : 'none';
+    }
+
+    function register() {
+      user.name = document.getElementById('regName').value;
+      user.email = document.getElementById('regEmail').value;
+      user.password = document.getElementById('regPassword').value;
+      alert('Registered successfully!');
+    }
+
+    function login() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      if (email === user.email && password === user.password) {
+        localStorage.setItem("userName", user.name || "User");
+        localStorage.setItem("balance", "0");
+        window.location.href = "second.html";
+      } else {
+        alert("Invalid credentials!");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Donate / Get Donation</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #fff; }
+    h2 { text-align: center; }
+    .form-section { max-width: 400px; margin: auto; display: none; }
+    input, button, textarea { width: 100%; margin: 10px 0; padding: 10px; }
+    #donorList, #receiverList { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2 id="pageTitle">Donation Portal</h2>
+
+  <!-- Donate Form -->
+  <div class="form-section" id="donateForm">
+    <h3>Donate</h3>
+    <input type="text" id="donorName" placeholder="Your Name">
+    <input type="text" id="donorContact" placeholder="Contact Info">
+    <input type="number" id="donorAmount" placeholder="Donation Amount">
+    <button onclick="submitDonation()">Submit Donation</button>
+    <div id="donorList"></div>
+  </div>
+
+  <!-- Get Donation Form -->
+  <div class="form-section" id="getForm">
+    <h3>Request Donation</h3>
+    <input type="text" id="receiverName" placeholder="Your Name">
+    <textarea id="receiverReason" placeholder="Reason/Proof"></textarea>
+    <input type="number" id="receiverAmount" placeholder="Amount Requested">
+    <button onclick="submitRequest()">Submit Request</button>
+    <div id="receiverList"></div>
+  </div>
+
+  <script>
+    const balanceKey = "balance";
+    const donorsKey = "donors";
+    const receiversKey = "receivers";
+
+    function getCurrentBalance() {
+      return parseInt(localStorage.getItem(balanceKey)) || 0;
+    }
+
+    function setCurrentBalance(amount) {
+      localStorage.setItem(balanceKey, amount.toString());
+    }
+
+    function submitDonation() {
+      const name = document.getElementById("donorName").value;
+      const contact = document.getElementById("donorContact").value;
+      const amount = parseInt(document.getElementById("donorAmount").value);
+
+      if (name && contact && amount > 0) {
+        const currentBalance = getCurrentBalance() + amount;
+        setCurrentBalance(currentBalance);
+
+        let donors = JSON.parse(localStorage.getItem(donorsKey)) || [];
+        donors.push({ name, amount });
+        localStorage.setItem(donorsKey, JSON.stringify(donors));
+
+        document.getElementById("donorList").innerHTML += `<p>${name} donated ₹${amount}</p>`;
+        alert("Donation successful!");
+      }
+    }
+
+    function submitRequest() {
+      const name = document.getElementById("receiverName").value;
+      const reason = document.getElementById("receiverReason").value;
+      const amount = parseInt(document.getElementById("receiverAmount").value);
+
+      const currentBalance = getCurrentBalance();
+      if (name && reason && amount > 0) {
+        if (amount <= currentBalance) {
+          setCurrentBalance(currentBalance - amount);
+
+          let receivers = JSON.parse(localStorage.getItem(receiversKey)) || [];
+          receivers.push({ name, amount });
+          localStorage.setItem(receiversKey, JSON.stringify(receivers));
+
+          document.getElementById("receiverList").innerHTML += `<p>${name} received ₹${amount}</p>`;
+          alert("Donation granted!");
+        } else {
+          alert("Not enough funds available.");
+        }
+      }
+    }
+
+    function initPage() {
+      const hash = window.location.hash;
+      if (hash === "#donate") {
+        document.getElementById("donateForm").style.display = "block";
+        document.getElementById("pageTitle").innerText = "Donate";
+      } else if (hash === "#get") {
+        document.getElementById("getForm").style.display = "block";
+        document.getElementById("pageTitle").innerText = "Request Donation";
+      }
+    }
+
+    window.onload = initPage;
+  </script>
+</body>
+</html>

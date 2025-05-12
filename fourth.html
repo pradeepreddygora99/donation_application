@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Donation History</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f9f9f9; }
+    h2 { text-align: center; }
+    .section { margin: 20px auto; max-width: 500px; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    ul { padding-left: 20px; }
+  </style>
+</head>
+<body>
+  <h2>Donation History</h2>
+
+  <div class="section">
+    <h3>Donors</h3>
+    <ul id="donorsList"></ul>
+  </div>
+
+  <div class="section">
+    <h3>Receivers</h3>
+    <ul id="receiversList"></ul>
+  </div>
+
+  <script>
+    function renderList(key, elementId) {
+      const data = JSON.parse(localStorage.getItem(key)) || [];
+      const listElement = document.getElementById(elementId);
+      if (data.length === 0) {
+        listElement.innerHTML = "<li>No data available</li>";
+      } else {
+        data.forEach(entry => {
+          const li = document.createElement("li");
+          li.textContent = `${entry.name} - ₹${entry.amount}`;
+          listElement.appendChild(li);
+        });
+      }
+    }
+
+    renderList("donors", "donorsList");
+    renderList("receivers", "receiversList");
+  </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <style>
+    body { font-family: Arial; text-align: center; background: #e6f2ff; padding: 30px; }
+    h2 { margin-bottom: 20px; }
+    button { padding: 15px 25px; margin: 10px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h2>Welcome, <span id="userName"></span>!</h2>
+  <button onclick="goTo('donate')">Donate</button>
+  <button onclick="goTo('get')">Get Donation</button>
+  <button onclick="checkBalance()">Check Balance</button>
+  <h3 id="balanceDisplay"></h3>
+
+  <script>
+    document.getElementById("userName").innerText = localStorage.getItem("userName") || "User";
+
+    function goTo(type) {
+      if (type === "donate") {
+        window.location.href = "third.html#donate";
+      } else {
+        window.location.href = "third.html#get";
+      }
+    }
+
+    function checkBalance() {
+      const balance = localStorage.getItem("balance") || "0";
+      document.getElementById("balanceDisplay").innerText = `Current Balance: ₹${balance}`;
+    }
+  </script>
+</body>
+</html>
